@@ -1,6 +1,7 @@
 import streamlit as st
 from src.utils import extract_news, analyze_sentiment, generate_hindi_speech, extract_keywords_keybert, comparison_sentiments
 from src.comparison import comparative_analysis
+import json
 
 # Set Full-Screen Mode with Sidebar
 st.set_page_config(layout="centered")
@@ -23,7 +24,7 @@ if get_news or compare_news or generate_audio:
 # Main Page Content
 if get_news:
     articles = extract_news(company)[:5]  # Get first 5 articles
-    news_data = {"Company": company, "Articles": []}  # ✅ Initialize structured output
+    news_data = {"Company": company, "Articles": []}  # Initialize structured output
 
     for article in articles:
         sentiment = analyze_sentiment(article["summary"])  # Analyze sentiment
@@ -36,7 +37,7 @@ if get_news:
             "Topics": topics
         })
 
-    # ✅ Display structured JSON output
+    # Display structured JSON output
     st.write("## Extracted News Data")
     st.json(news_data)  # Displays output in formatted JSON
 
@@ -47,6 +48,11 @@ if compare_news:
 
 if generate_audio:
     st.write("## Hindi Audio Summary")
-    hindi_text = " ".join([article["summary"] for article in articles])
-    audio_file = generate_hindi_speech(hindi_text)
+
+    text = " ".join([
+        json.dumps(comparison_sentiments(articles), ensure_ascii=False, indent=2),
+        json.dumps(comparative_analysis(articles[:2]), ensure_ascii=False, indent=2)
+    ])
+
+    audio_file = generate_hindi_speech(text)
     st.audio(audio_file)

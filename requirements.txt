@@ -4,6 +4,7 @@ requests
 bs4
 gTTS
 google-generativeai
+deep-translator
 streamlit
 fastapi
 transformers==4.35.2

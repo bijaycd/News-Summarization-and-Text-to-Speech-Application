@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from collections import Counter
 from gtts import gTTS
+from deep_translator import GoogleTranslator
 from transformers import pipeline
 from keybert import KeyBERT
 
@@ -63,6 +64,7 @@ def comparison_sentiments(articles):
 
 # Summarized Text to Hindi Speech
 def generate_hindi_speech(text, filename="output.mp3"):
-    tts = gTTS(text, lang="hi")
+    hindi_text = GoogleTranslator(source="auto", target="hi").translate(text)  # Translate to Hindi
+    tts = gTTS(hindi_text, lang="hi")
     tts.save(filename)
     return filename
