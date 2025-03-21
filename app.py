@@ -1,8 +1,9 @@
 import streamlit as st
 import requests
+import os
 
-# FastAPI Server URL
-FASTAPI_URL = "http://127.0.0.1:8000"
+FASTAPI_URL = os.getenv("SPACE_API_URL", "http://0.0.0.0:8000")
+
 
 # Use normal width layout
 st.set_page_config(layout="centered")
