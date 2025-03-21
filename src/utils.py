@@ -1,8 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
-from textblob import TextBlob
 from collections import Counter
 from gtts import gTTS
+from transformers import pipeline
+from keybert import KeyBERT
 
 # News Extraction
 def extract_news(topic):
@@ -32,23 +33,31 @@ def extract_news(topic):
 
 
 # Sentiment Analysis
+sentiment_pipeline = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english")
+
+# Function to analyze sentiment
 def analyze_sentiment(text):
-    score = TextBlob(text).sentiment.polarity
-    if score > 0.05:
-        return "Positive"
-    elif score < -0.05:
-        return "Negative"
-    else:
-        return "Neutral"
-    
+    result = sentiment_pipeline(text)[0]  # Run text through the model
+    sentiment = result["label"]  # Extract sentiment label
+    return sentiment  # Returns 'POSITIVE' or 'NEGATIVE'
+
+
+# Keyword Extraction
+kw_model = KeyBERT('distilbert-base-nli-mean-tokens')
+
+def extract_keywords_keybert(text):
+    return [kw[0] for kw in kw_model.extract_keywords(text, keyphrase_ngram_range=(1, 2), top_n=3)]
+
+
 # Comparative Analysis
-def comparative_analysis(articles):
+def comparison_sentiments(articles):
     sentiments = [analyze_sentiment(article["summary"]) for article in articles]
     sentiment_counts = Counter(sentiments)
+    final_sentiment = f"Overall sentiment is {max(sentiment_counts, key=sentiment_counts.get)} with {sentiment_counts} distribution."
 
     return {
         "Sentiment Distribution": sentiment_counts,
-        "Overall Sentiment": "Mostly Positive" if sentiment_counts["Positive"] > sentiment_counts["Negative"] else "Mostly Negative"
+        "Final Sentiment Analysis": final_sentiment
     }
 
 
