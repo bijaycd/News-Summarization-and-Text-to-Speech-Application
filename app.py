@@ -66,7 +66,7 @@ if compare_news:
         st.error("Error fetching comparative analysis.")
 
 # Generate Hindi Speech Audio
-if st.button("Generate Audio"):
+if generate_audio:
     response = requests.get(f"{FASTAPI_URL}/generate-audio/", params={"company": company})
 
     if response.status_code == 200:
