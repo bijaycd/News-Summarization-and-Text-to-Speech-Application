@@ -7,6 +7,12 @@ WORKDIR /app
 # Copy the entire project into the container
 COPY . /app
 
+# Create a writable cache directory
+RUN mkdir -p /app/cache && chmod -R 777 /app/cache
+
+# Set the environment variable to use this directory
+ENV TRANSFORMERS_CACHE=/app/cache
+
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 

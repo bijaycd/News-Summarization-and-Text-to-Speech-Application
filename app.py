@@ -1,8 +1,7 @@
 import streamlit as st
 import requests
-import os
 
-FASTAPI_URL = "https://bijayjr-SentimentNews.hf.space"
+FASTAPI_URL = "http://0.0.0.0:8000"
 
 # Use normal width layout
 st.set_page_config(layout="centered")
