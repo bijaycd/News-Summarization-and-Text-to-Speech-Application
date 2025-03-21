@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
-import json
+import uvicorn
 from src.utils import extract_news, analyze_sentiment, extract_keywords_keybert, comparison_sentiments, generate_hindi_speech
 from src.comparison import comparative_analysis
 
@@ -59,3 +59,6 @@ def generate_audio(company: str):
     audio_file = generate_hindi_speech(text)
 
     return FileResponse(audio_file, media_type="audio/mpeg", filename="hindi_summary.mp3")
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
