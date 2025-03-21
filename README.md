@@ -1,1 +1,8 @@
-# News-Summarization-and-Text-to-Speech-Application
+---
+title: SentimentNews
+emoji: 🌍
+colorFrom: yellow
+colorTo: yellow
+sdk: docker
+pinned: false
+---
