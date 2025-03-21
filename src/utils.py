@@ -1,4 +1,5 @@
 import requests
+import io
 from bs4 import BeautifulSoup
 from collections import Counter
 from gtts import gTTS
@@ -66,5 +67,10 @@ def comparison_sentiments(articles):
 def generate_hindi_speech(text, filename="output.mp3"):
     hindi_text = GoogleTranslator(source="auto", target="hi").translate(text)  # Translate to Hindi
     tts = gTTS(hindi_text, lang="hi")
-    tts.save(filename)
-    return filename
+
+    # Store the speech in memory instead of a file
+    audio_buffer = io.BytesIO()
+    tts.write_to_fp(audio_buffer)
+    audio_buffer.seek(0)  # Move to start for playback
+
+    return audio_buffer

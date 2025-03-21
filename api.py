@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 import uvicorn
 from src.utils import extract_news, analyze_sentiment, extract_keywords_keybert, comparison_sentiments, generate_hindi_speech
 from src.comparison import comparative_analysis
@@ -44,21 +44,12 @@ def get_comparative_analysis(company: str):
 
 @app.get("/generate-audio/")
 def generate_audio(company: str):
-    """Generates Hindi speech from the news analysis and provides a downloadable file."""
-    articles = extract_news(company)[:5]
-    if not articles:
-        raise HTTPException(status_code=404, detail="No articles found for the given company.")
+    text = f"Audio summary for {company}."
+    audio_buffer = generate_hindi_speech(text)
 
-    # Generate the text to convert into speech
-    text = f"""
-    Sentiment Analysis Summary: {comparison_sentiments(articles).get("Final Sentiment Analysis", "No sentiment summary available.")}.
-    Comparative Analysis: {comparative_analysis(articles[:2]).get("Generated Summary", "No comparison summary available.")}.
-    """
-
-    # Generate Hindi Speech
-    audio_file = generate_hindi_speech(text)
-
-    return FileResponse(audio_file, media_type="audio/mpeg", filename="hindi_summary.mp3")
+    return StreamingResponse(audio_buffer, media_type="audio/mpeg", headers={
+        "Content-Disposition": "attachment; filename=hindi_summary.mp3"
+    })
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
