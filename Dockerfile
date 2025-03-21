@@ -15,4 +15,4 @@ EXPOSE 8000
 EXPOSE 7860
 
 # Start both FastAPI and Streamlit
-CMD ["sh", "-c", "uvicorn api:app --host 0.0.0.0 --port 8000 & streamlit run app.py --server.port 7860 --server.address 0.0.0.0"]
+CMD ["bash", "-c", "uvicorn api:app --host 0.0.0.0 --port 8000 & streamlit run app.py --server.port 7860 --server.address 0.0.0.0"]
