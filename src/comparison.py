@@ -1,7 +1,7 @@
 from collections import Counter
 from transformers import pipeline
 from keybert import KeyBERT
-from src.utils import extract_keywords_keybert, analyze_sentiment, clean_llm_response
+from src.utils import extract_keywords_keybert, analyze_sentiment
 from src.summarization import summarize_overall_sentiment
 
 # ✅ Load necessary models
