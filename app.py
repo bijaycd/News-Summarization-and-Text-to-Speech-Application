@@ -102,23 +102,21 @@ if compare_news:
 if generate_audio:
     st.write("### Hindi Audio Summary")
 
-    # ✅ Fetch the audio response
+    # ✅ Fetch the audio file from API
     audio_url = f"{FASTAPI_URL}/generate-audio/?company={company}"
+    response = requests.get(audio_url)
 
-    # ✅ Embed audio using an HTML5 audio player
-    st.markdown(
-        f"""
-        <audio controls autoplay>
-            <source src="{audio_url}" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-        """,
-        unsafe_allow_html=True
-    )
+    if response.status_code == 200:
+        # ✅ Save the audio file in memory
+        audio_data = response.content
 
-    # ✅ Download button for Hindi summary
-    audio_data = requests.get(audio_url).content
-    st.download_button(label="Download Audio",
-                       data=audio_data,
-                       file_name="hindi_summary.mp3",
-                       mime="audio/mpeg")
+        # ✅ Play the audio directly in UI
+        st.audio(audio_data, format="audio/mp3")
+
+        # ✅ Download button for Hindi summary
+        st.download_button(label="Download Hindi Audio",
+                           data=audio_data,
+                           file_name="hindi_summary.mp3",
+                           mime="audio/mpeg")
+    else:
+        st.error("❌ Failed to generate audio. Please try again.")
