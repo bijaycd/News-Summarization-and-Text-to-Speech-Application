@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 
-FASTAPI_URL = "http://0.0.0.0:8000"
+FASTAPI_URL = "https://bijayjr-SentimentNews.hf.space"
 
 # Use normal width layout
 st.set_page_config(page_title="Insightful News AI", page_icon = "🤖", layout="centered")
