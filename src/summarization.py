@@ -1,17 +1,10 @@
-import json
 import os
 import groq
 
-# ✅ Load Groq API key
-config_path = "config.json"
-if os.path.exists(config_path):
-    with open(config_path, "r") as f:
-        config = json.load(f)
-    GROQ_API_KEY = config.get("groq_api_key", None)
-else:
-    raise FileNotFoundError("config.json file is missing!")
+working_dir = os.path.dirname(os.path.abspath(__file__))
+GROQ_API_KEY = os.environ["GROQ_API_KEY"]
 
-# ✅ Initialize Groq Client
+# Initialize Groq Client
 client = groq.Client(api_key=GROQ_API_KEY)
 
 def summarize_overall_sentiment(articles):
