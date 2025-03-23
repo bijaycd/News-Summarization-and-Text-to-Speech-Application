@@ -51,17 +51,6 @@ def extract_keywords_keybert(text):
     return [kw[0].title() for kw in kw_model.extract_keywords(text, keyphrase_ngram_range=(1, 2), top_n=3)]
 
 
-# clean_llm_response
-def clean_llm_response(llm_text):
-    """Cleans LLM response by removing headers and extra formatting."""
-
-    lines = llm_text.split("\n")
-    cleaned_lines = [line for line in lines if not line.startswith("**Overall Sentiment Summary:") and not line.startswith("Explanation:")]
-
-    # ✅ Join the cleaned lines into a final summary
-    return "\n".join(cleaned_lines).strip()
-
-
 
 # Summarized Text to Hindi Speech
 def generate_hindi_speech(text):

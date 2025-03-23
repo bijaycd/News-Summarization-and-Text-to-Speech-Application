@@ -20,13 +20,12 @@ def summarize_overall_sentiment(articles):
     # ✅ Define the prompt
     prompt = f"""
     You are an AI model designed for news sentiment summarization.
-    Analyze the following news articles and provide an **overall sentiment summary** (Positive, Negative, or Neutral) 
-    along with a brief explanation:
+    Analyze the following news articles and determine the overall sentiment 
+    (Positive, Negative, or Neutral) with a brief justification.
 
     {concatenated_text}
 
-    Your response should be structured as follows:
-    - [Brief reason why this sentiment was chosen]
+    Provide a concise summary without additional formatting or headers in two paragraphs.
     """
 
     # ✅ Use a valid Groq model (Mixtral or LLaMA-3)
@@ -39,4 +38,5 @@ def summarize_overall_sentiment(articles):
         max_tokens=250
     )
 
+    # ✅ Return a cleaned response (no extra characters)
     return response.choices[0].message.content.strip()

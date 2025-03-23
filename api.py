@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse, StreamingResponse
 import uvicorn
-from src.utils import extract_news, analyze_sentiment, extract_keywords_keybert, generate_hindi_speech, clean_llm_response
+from src.utils import extract_news, analyze_sentiment, extract_keywords_keybert, generate_hindi_speech
 from src.comparison import comparison_analysis
 from src.summarization import summarize_overall_sentiment
 
@@ -16,7 +16,7 @@ def home():
 @app.get("/news-analysis/")
 def get_news_analysis(company: str):
     """Extracts news, analyzes sentiment, and provides a JSON response."""
-    articles = extract_news(company)[:5]  # Extract first 5 articles
+    articles = extract_news(company)[:10]  # Extract first 10 articles
     if not articles:
         raise HTTPException(status_code=404, detail="No articles found for the given company.")
 
@@ -65,10 +65,9 @@ def generate_audio(company: str):
 
     # ✅ Generate LLM-based sentiment summary
     summary_text = summarize_overall_sentiment(articles)
-    cleaned_summary = clean_llm_response(summary_text)
 
     # ✅ Convert summary to Hindi speech
-    audio_buffer = generate_hindi_speech(cleaned_summary)
+    audio_buffer = generate_hindi_speech(summary_text)
 
     # ✅ Return only the Hindi audio as a file response
     return StreamingResponse(audio_buffer, media_type="audio/mpeg", headers={
