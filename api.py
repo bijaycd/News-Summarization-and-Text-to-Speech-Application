@@ -1,6 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse, StreamingResponse, FileResponse
-from src.news_report import generate_pdf_report
+from fastapi.responses import JSONResponse, StreamingResponse
 import uvicorn
 from src.utils import extract_news, analyze_sentiment, extract_keywords_keybert, generate_hindi_speech
 from src.comparison import comparison_analysis
@@ -71,23 +70,24 @@ def generate_audio(company: str) -> StreamingResponse:
     )
 
 
-# (BONUS) PDF report for news analysis
-@app.get("/generate-report/")
-def generate_report(company: str):
-    """API to generate a PDF report for news analysis."""
+# (BONUS) Search for Articles based on Keyword or Sentiment
+@app.get("/search-news/")
+def search_news(company: str, keyword: str = None, sentiment: str = None):
+    """Search for articles based on keyword or sentiment."""
 
-    # ✅ Extract 29 articles & analyze them
-    articles = extract_news(company)
+    articles = extract_news(company)[:10]
     if not articles:
         raise HTTPException(status_code=404, detail="No articles found.")
 
-    # ✅ Run sentiment & topic analysis
-    analysis_data = comparison_analysis(articles)
+    filtered_articles = []
+    for article in articles:
+        if keyword and keyword.lower() not in article["summary"].lower():
+            continue
+        if sentiment and analyze_sentiment(article["summary"]).lower() != sentiment.lower():
+            continue
+        filtered_articles.append(article)
 
-    # ✅ Generate the PDF Report
-    pdf_filename = generate_pdf_report(company, analysis_data)
-
-    return FileResponse(pdf_filename, media_type="application/pdf", filename=pdf_filename)
+    return JSONResponse(content={"Company": company, "Filtered Articles": filtered_articles})
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

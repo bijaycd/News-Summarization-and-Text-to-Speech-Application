@@ -14,7 +14,11 @@ company = st.sidebar.text_input("Enter Company Name")
 get_news = st.sidebar.button("Get News Summary")
 compare_news = st.sidebar.button("Comparative Analysis")
 generate_audio = st.sidebar.button("Generate Audio")
-download_full_report = st.sidebar.button("Download Full Report")
+search = st.sidebar.button("Search")
+
+st.sidebar.subheader("🔍 Search & Filter News")
+search_keyword = st.sidebar.text_input("Search by keyword")
+search_sentiment = st.sidebar.selectbox("Filter by Sentiment", ["", "Positive", "Negative", "Neutral"])
 
 
 def fetch_data(endpoint, params=None):
@@ -128,15 +132,26 @@ if generate_audio:
         st.error("Failed to generate audio. Please try again.")
 
 
-# Download Full Report
-if download_full_report:
-    report_url = f"{FASTAPI_URL}/generate-report/?company={company}"
-    response = requests.get(report_url)
+
+# (BONUS) Search for Articles based on Keyword or Sentiment
+if search:
+    params = {"company": company}
+    if search_keyword:
+        params["keyword"] = search_keyword
+    if search_sentiment:
+        params["sentiment"] = search_sentiment
+
+    response = requests.get(f"{FASTAPI_URL}/search-news/", params=params)
 
     if response.status_code == 200:
-        st.download_button(label="Download Full Report (PDF)",
-                           data=response.content,
-                           file_name=f"{company}_news_report.pdf",
-                           mime="application/pdf")
+        search_results = response.json()["Filtered Articles"]
+        if search_results:
+            for i, article in enumerate(search_results, start=1):
+                st.write(f"### {i}. {article['title']}")
+                st.write(f"**Summary:** {article['summary']}")
+                st.write(f"**Sentiment:** {article['sentiment']}")
+                st.markdown("---")
+        else:
+            st.warning("No matching articles found.")
     else:
-        st.error("Failed to generate report.")
+        st.error("Failed to fetch search results.")
