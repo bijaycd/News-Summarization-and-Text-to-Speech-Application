@@ -1,8 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse, StreamingResponse
 import uvicorn
-from src.utils import extract_news, analyze_sentiment, extract_keywords_keybert, comparison_sentiments, generate_hindi_speech
-from src.comparison import comparative_analysis
+from src.utils import extract_news, analyze_sentiment, extract_keywords_keybert, generate_hindi_speech
+from src.comparison import comparison_analysis
 from src.summarization import summarize_overall_sentiment
 
 
@@ -37,27 +37,20 @@ def get_news_analysis(company: str):
 
 
 
-@app.get("/comparative-analysis/")
+@app.get("/comparative-analyst/")
 def get_comparative_analysis(company: str):
-    """Provides a comparative analysis between two articles and overall sentiment analysis."""
+    
+    # ✅ Extract 10 articles
     articles = extract_news(company)[:10]
+    
+    if len(articles) < 10:
+        raise HTTPException(status_code=400, detail="Not enough articles for a full comparison.")
 
-    if len(articles) < 2:
-        raise HTTPException(status_code=400, detail="Not enough articles for comparison.")
-
-    # ✅ Use the function from utils.py
-    sentiment_analysis = comparison_sentiments(articles)
-
-    # ✅ Comparative analysis of the first 2 articles
-    comparison_result = comparative_analysis(articles[:2])
-
-    # ✅ Include sentiment data in the response
-    comparison_data = {
-        "Overall Sentiment Analysis": sentiment_analysis,
-        "Comparison": comparison_result
-    }
+    # ✅ Run comprehensive comparative analysis
+    comparison_data = comparison_analysis(articles)
 
     return JSONResponse(content=comparison_data)
+
 
 
 

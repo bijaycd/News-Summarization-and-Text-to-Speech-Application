@@ -34,21 +34,21 @@ if get_news:
         st.error("Error fetching news. Please try again.")
 
 
-# Comparative Analysis
+# ✅ Comparative Analysis
 if compare_news:
     st.write("## Comparative Analysis")
 
-    response = requests.get(f"{FASTAPI_URL}/comparative-analysis/", params={"company": company})
+    response = requests.get(f"{FASTAPI_URL}/comparative-analyst/", params={"company": company})
 
     if response.status_code == 200:
         comparison_data = response.json()
 
         # ✅ Extract overall sentiment analysis
-        overall_sentiment_data = comparison_data.get("Overall Sentiment Analysis", {})       
-        sentiment_distribution = overall_sentiment_data.get("Sentiment Distribution", {})
-        final_sentiment = overall_sentiment_data.get("Final Sentiment Analysis", "No sentiment summary available.")
+        sentiment_data = comparison_data.get("Sentiment Analysis", {})
+        sentiment_distribution = sentiment_data.get("Sentiment Distribution", {})
+        final_sentiment = sentiment_data.get("Final Sentiment Summary", "No sentiment summary available.")
 
-        # ✅ Extract calculated sentiment counts safely
+        # ✅ Extract sentiment counts safely
         positive_count = sentiment_distribution.get("Positive", 0)
         negative_count = sentiment_distribution.get("Negative", 0)
         neutral_count = sentiment_distribution.get("Neutral", 0)
@@ -63,36 +63,38 @@ if compare_news:
         # ✅ Display final sentiment
         st.write("### Final Sentiment")
         if positive_count > negative_count:
-            st.success(f"**{final_sentiment}**")  # ✅ Green box for Positive
+            st.success(f"**{final_sentiment}**")  # ✅ Green for Positive
         elif positive_count < negative_count:
-            st.error(f"**{final_sentiment}**")  # ✅ Red box for Negative
+            st.error(f"**{final_sentiment}**")  # ✅ Red for Negative
         else:
-            st.warning(f"**{final_sentiment}**")  # ✅ Yellow box for Neutral
+            st.warning(f"**{final_sentiment}**")  # ✅ Yellow for Neutral
 
-        # ✅ Display coverage differences correctly
-        st.write("### Coverage Differences")
-        coverage_differences = comparison_data.get("Comparison", {}).get("Coverage Differences", [])
-        if coverage_differences:
-            for diff in coverage_differences:
-                st.write(f"- **{diff.get('Comparison', 'No data available')}**")
-        else:
-            st.write("No coverage differences found.")
-        st.markdown("---")
-
-        # ✅ Display topic overlap correctly
+        # ✅ Display topic overlap
         st.write("### Topic Overlap")
-        topic_overlap = comparison_data.get("Comparison", {}).get("Topic Overlap", {})
+        topic_overlap = comparison_data.get("Topic Overlap", {})
 
+        # ✅ Display common topics
         common_topics = topic_overlap.get("Common Topics", [])
-        unique_topics_1 = topic_overlap.get("Unique Topics Per Article", [[], []])[0]
-        unique_topics_2 = topic_overlap.get("Unique Topics Per Article", [[], []])[1]
+        if common_topics:
+            st.write(f"**Common Topics (Appearing in ≥3 articles):** {', '.join(common_topics)}")
+        else:
+            st.write("No significant common topics found.")
 
-        st.write(f"**Common Topics:** {', '.join(common_topics) if common_topics else 'None'}")
-        st.write(f"**Unique Topics in Article 1:** {', '.join(unique_topics_1) if unique_topics_1 else 'None'}")
-        st.write(f"**Unique Topics in Article 2:** {', '.join(unique_topics_2) if unique_topics_2 else 'None'}")
+        # ✅ Display unique topics per article
+        unique_topics_per_article = topic_overlap.get("Unique Topics Per Article", [])
+        if unique_topics_per_article:
+            for topic_data in unique_topics_per_article:
+                article_number = topic_data.get("Article", "Unknown")
+                unique_topics = topic_data.get("Unique Topics", [])
+                st.write(f"**Unique Topics in Article {article_number}:** {', '.join(unique_topics) if unique_topics else 'None'}")
+
+        # ✅ Display Final LLM-Based Sentiment Analysis
+        st.write("### LLM-Based Sentiment Summary")
+        final_llm_summary = comparison_data.get("Final Sentiment Analysis", "No summary available.")
+        st.info(f"**{final_llm_summary}**")
 
     else:
-        st.error(f"Error fetching comparative analysis: {response.status_code}")
+        st.error(f"🚨 Error fetching comparative analysis: {response.status_code}")
 
 
 

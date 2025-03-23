@@ -51,23 +51,23 @@ def extract_keywords_keybert(text):
     return [kw[0].title() for kw in kw_model.extract_keywords(text, keyphrase_ngram_range=(1, 2), top_n=3)]
 
 
-# Comparative Analysis
-def comparison_sentiments(articles):
-    """Analyzes sentiment distribution for all 10 articles and determines the overall sentiment."""
-    sentiments = [analyze_sentiment(article["summary"]) for article in articles]
+# # Comparative Analysis
+# def comparison_sentiments(articles):
+#     """Analyzes sentiment distribution for all 10 articles and determines the overall sentiment."""
+#     sentiments = [analyze_sentiment(article["summary"]) for article in articles]
 
-    # ✅ Convert sentiment labels to Proper Case
-    sentiment_counts = Counter(sentiments)
-    formatted_counts = {sent.capitalize(): count for sent, count in sentiment_counts.items()}
+#     # ✅ Convert sentiment labels to Proper Case
+#     sentiment_counts = Counter(sentiments)
+#     formatted_counts = {sent.capitalize(): count for sent, count in sentiment_counts.items()}
 
-    # ✅ Determine the final sentiment
-    overall_sentiment = max(sentiment_counts, key=sentiment_counts.get, default="Neutral").capitalize()
-    sentiment_summary = f"Overall sentiment is {overall_sentiment} ({formatted_counts.get('Negative', 0)} Negative, {formatted_counts.get('Positive', 0)} Positive)."
+#     # ✅ Determine the final sentiment
+#     overall_sentiment = max(sentiment_counts, key=sentiment_counts.get, default="Neutral").capitalize()
+#     sentiment_summary = f"Overall sentiment is {overall_sentiment} ({formatted_counts.get('Negative', 0)} Negative, {formatted_counts.get('Positive', 0)} Positive)."
 
-    return {
-        "Sentiment Distribution": formatted_counts,
-        "Final Sentiment Analysis": sentiment_summary
-    }
+#     return {
+#         "Sentiment Distribution": formatted_counts,
+#         "Final Sentiment Analysis": sentiment_summary
+#     }
 
 
 
