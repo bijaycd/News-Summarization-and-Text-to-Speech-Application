@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse, FileResponse
+from src.news_report import generate_pdf_report
 import uvicorn
 from src.utils import extract_news, analyze_sentiment, extract_keywords_keybert, generate_hindi_speech
 from src.comparison import comparison_analysis
@@ -69,6 +70,24 @@ def generate_audio(company: str) -> StreamingResponse:
         headers={"Content-Disposition": "attachment; filename=hindi_summary.mp3"}
     )
 
+
+# (BONUS) PDF report for news analysis
+@app.get("/generate-report/")
+def generate_report(company: str):
+    """API to generate a PDF report for news analysis."""
+
+    # ✅ Extract 29 articles & analyze them
+    articles = extract_news(company)
+    if not articles:
+        raise HTTPException(status_code=404, detail="No articles found.")
+
+    # ✅ Run sentiment & topic analysis
+    analysis_data = comparison_analysis(articles)
+
+    # ✅ Generate the PDF Report
+    pdf_filename = generate_pdf_report(company, analysis_data)
+
+    return FileResponse(pdf_filename, media_type="application/pdf", filename=pdf_filename)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -14,6 +14,7 @@ company = st.sidebar.text_input("Enter Company Name")
 get_news = st.sidebar.button("Get News Summary")
 compare_news = st.sidebar.button("Comparative Analysis")
 generate_audio = st.sidebar.button("Generate Audio")
+download_full_report = st.sidebar.button("Download Full Report")
 
 
 def fetch_data(endpoint, params=None):
@@ -125,3 +126,17 @@ if generate_audio:
         )
     else:
         st.error("Failed to generate audio. Please try again.")
+
+
+# Download Full Report
+if download_full_report:
+    report_url = f"{FASTAPI_URL}/generate-report/?company={company}"
+    response = requests.get(report_url)
+
+    if response.status_code == 200:
+        st.download_button(label="Download Full Report (PDF)",
+                           data=response.content,
+                           file_name=f"{company}_news_report.pdf",
+                           mime="application/pdf")
+    else:
+        st.error("Failed to generate report.")

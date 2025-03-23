@@ -112,7 +112,7 @@ curl -X GET "http://127.0.0.1:8000/news-analysis/?company=Google"
 
 ### **2️⃣ Comparative Sentiment Analysis**  
 ```bash
-curl -X GET "http://127.0.0.1:8000/comparative-analyst/?company=Google"
+curl -X GET "http://127.0.0.1:8000/comparative-analysis/?company=Google"
 ```
 **Response Example**
 ```json
