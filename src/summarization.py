@@ -4,20 +4,28 @@ import groq
 working_dir = os.path.dirname(os.path.abspath(__file__))
 GROQ_API_KEY = os.environ["GROQ_API_KEY"]
 
-# ✅ Check if API Key is available
+# Check if API Key is available
 if not GROQ_API_KEY:
-    raise ValueError("🚨 Error: GROQ_API_KEY is missing! Set it as an environment variable.")
+    raise ValueError("Error: GROQ_API_KEY is missing! Set it as an environment variable.")
 
-# ✅ Initialize Groq Client
+# Initialize Groq Client
 client = groq.Groq(api_key=GROQ_API_KEY)
 
 def summarize_overall_sentiment(articles):
-    """Uses Groq API (LLaMA-3, Mixtral) to summarize sentiment analysis."""
-    
-    # ✅ Concatenate all article summaries
+    """
+    Summarizes sentiment analysis using the Groq API (LLaMA-3, Mixtral).
+
+    Args:
+        articles (list[dict]): A list of articles, each containing a "summary" key.
+
+    Returns:
+        str: A concise sentiment summary based on the news articles.
+    """
+
+    # Concatenate all article summaries
     concatenated_text = " ".join(article["summary"] for article in articles)
 
-    # ✅ Define the prompt
+    # Define the prompt for sentiment summarization
     prompt = f"""
     You are an AI model designed for news sentiment summarization.
     Analyze the following news articles and determine the overall sentiment 
@@ -28,7 +36,7 @@ def summarize_overall_sentiment(articles):
     Provide a concise summary without additional formatting or headers in two paragraphs.
     """
 
-    # ✅ Use a valid Groq model (Mixtral or LLaMA-3)
+    # Use a valid Groq model (Mixtral or LLaMA-3)
     response = client.chat.completions.create(
         model="mistral-saba-24b",
         messages=[
@@ -38,5 +46,5 @@ def summarize_overall_sentiment(articles):
         max_tokens=250
     )
 
-    # ✅ Return a cleaned response (no extra characters)
+    # Return a cleaned response
     return response.choices[0].message.content.strip()
