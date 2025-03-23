@@ -101,13 +101,24 @@ if compare_news:
 # Generate Hindi Speech Audio
 if generate_audio:
     st.write("### Hindi Audio Summary")
-    
-    # ✅ Directly play the audio from API
-    st.audio(f"{FASTAPI_URL}/generate-audio/?company={company}", format="audio/mp3")
+
+    # ✅ Fetch the audio response
+    audio_url = f"{FASTAPI_URL}/generate-audio/?company={company}"
+
+    # ✅ Embed audio using an HTML5 audio player
+    st.markdown(
+        f"""
+        <audio controls autoplay>
+            <source src="{audio_url}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        """,
+        unsafe_allow_html=True
+    )
 
     # ✅ Download button for Hindi summary
-    audio_data = requests.get(f"{FASTAPI_URL}/generate-audio/?company={company}").content
-    st.download_button(label="Download Hindi Audio",
+    audio_data = requests.get(audio_url).content
+    st.download_button(label="Download Audio",
                        data=audio_data,
                        file_name="hindi_summary.mp3",
                        mime="audio/mpeg")

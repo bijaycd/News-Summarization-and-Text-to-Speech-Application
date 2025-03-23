@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse, StreamingResponse
 import uvicorn
-from src.utils import extract_news, analyze_sentiment, extract_keywords_keybert, generate_hindi_speech
+from src.utils import extract_news, analyze_sentiment, extract_keywords_keybert, generate_hindi_speech, clean_llm_response
 from src.comparison import comparison_analysis
 from src.summarization import summarize_overall_sentiment
 
@@ -65,9 +65,10 @@ def generate_audio(company: str):
 
     # ✅ Generate LLM-based sentiment summary
     summary_text = summarize_overall_sentiment(articles)
+    cleaned_summary = clean_llm_response(summary_text)
 
     # ✅ Convert summary to Hindi speech
-    audio_buffer = generate_hindi_speech(summary_text)
+    audio_buffer = generate_hindi_speech(cleaned_summary)
 
     # ✅ Return only the Hindi audio as a file response
     return StreamingResponse(audio_buffer, media_type="audio/mpeg", headers={

@@ -1,7 +1,7 @@
 from collections import Counter
 from transformers import pipeline
 from keybert import KeyBERT
-from src.utils import extract_keywords_keybert, analyze_sentiment
+from src.utils import extract_keywords_keybert, analyze_sentiment, clean_llm_response
 from src.summarization import summarize_overall_sentiment
 
 # ✅ Load necessary models
@@ -39,6 +39,7 @@ def comparison_analysis(articles):
 
     # ✅ LLM-Based Sentiment Summary
     overall_summary = summarize_overall_sentiment(articles)
+    cleaned_summary = clean_llm_response(overall_summary)
 
     # ✅ Return the final comparative analysis
     return {
@@ -50,5 +51,5 @@ def comparison_analysis(articles):
             "Common Topics": common_topics,
             "Unique Topics Per Article": unique_topics_per_article
         },
-        "Final Sentiment Analysis": overall_summary  # ✅ LLM-generated summary
+        "Final Sentiment Analysis": cleaned_summary  # ✅ LLM-generated summary
     }
