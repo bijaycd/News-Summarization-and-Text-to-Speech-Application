@@ -53,42 +53,25 @@ def get_comparative_analysis(company: str):
 
 
 
-
+# Generate audio summary
 @app.get("/generate-audio/")
 def generate_audio(company: str):
-    """Generates an LLM-based summary and provides a Hindi audio output."""
+    """Generates a Hindi audio summary using LLM response."""
     
-    # ✅ Step 1: Extract news articles
+    # ✅ Extract 10 news articles
     articles = extract_news(company)[:10]
     if not articles:
         raise HTTPException(status_code=404, detail="No articles found for the given company.")
 
-    # ✅ Step 2: Generate the LLM-based summary
+    # ✅ Generate LLM-based sentiment summary
     summary_text = summarize_overall_sentiment(articles)
 
-    # ✅ Step 3: Convert summary to Hindi audio (returns a buffer)
+    # ✅ Convert summary to Hindi speech
     audio_buffer = generate_hindi_speech(summary_text)
 
-    # ✅ Step 4: Store the audio file in memory
-    audio_filename = "hindi_summary.mp3"
-    audio_buffer.seek(0)
-
-    # ✅ Step 5: Return JSON response with summary and audio file link
-    return JSONResponse(
-        content={
-            "summary": summary_text,
-            "audio_url": f"/download-audio/?filename={audio_filename}"
-        }
-    )
-
-@app.get("/download-audio/")
-def download_audio(filename: str):
-    """Streams the generated audio file."""
-    audio_buffer = generate_hindi_speech("Placeholder text")  # Replace with actual generated buffer
-    audio_buffer.seek(0)
-
+    # ✅ Return only the Hindi audio as a file response
     return StreamingResponse(audio_buffer, media_type="audio/mpeg", headers={
-        "Content-Disposition": f"attachment; filename={filename}"
+        "Content-Disposition": "attachment; filename=hindi_summary.mp3"
     })
 
 

@@ -89,7 +89,7 @@ if compare_news:
                 st.write(f"**Unique Topics in Article {article_number}:** {', '.join(unique_topics) if unique_topics else 'None'}")
 
         # ✅ Display Final LLM-Based Sentiment Analysis
-        st.write("### LLM-Based Sentiment Summary")
+        st.write("## Overall Sentiment Summary")
         final_llm_summary = comparison_data.get("Final Sentiment Analysis", "No summary available.")
         st.info(f"**{final_llm_summary}**")
 
@@ -100,24 +100,14 @@ if compare_news:
 
 # Generate Hindi Speech Audio
 if generate_audio:
-    st.write("## Overall Summary")
+    st.write("### Hindi Audio Summary")
+    
+    # ✅ Directly play the audio from API
+    st.audio(f"{FASTAPI_URL}/generate-audio/?company={company}", format="audio/mp3")
 
-    response = requests.get(f"{FASTAPI_URL}/generate-audio/", params={"company": company})
-
-    if response.status_code == 200:
-        data = response.json()
-        summary_text = data.get("summary", "No summary available.")
-        audio_url = data.get("audio_url", "")
-
-        # ✅ Display the text summary
-        st.write("### Text Summary")
-        st.info(f"**{summary_text}**")
-
-        # ✅ Play the audio output (Correct URL)
-        if audio_url:
-            st.audio(f"{FASTAPI_URL}{audio_url}")  # Use the correct audio download link
-        else:
-            st.warning("Audio file is not available.")
-
-    else:
-        st.error(f"Error generating audio: {response.status_code}")
+    # ✅ Download button for Hindi summary
+    audio_data = requests.get(f"{FASTAPI_URL}/generate-audio/?company={company}").content
+    st.download_button(label="Download Hindi Audio",
+                       data=audio_data,
+                       file_name="hindi_summary.mp3",
+                       mime="audio/mpeg")
