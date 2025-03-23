@@ -13,6 +13,9 @@ RUN mkdir -p /app/cache && chmod -R 777 /app/cache
 # Set the environment variable to use this directory
 ENV TRANSFORMERS_CACHE=/app/cache
 
+# Install fontconfig
+RUN apt-get update && apt-get install -y fontconfig
+
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
