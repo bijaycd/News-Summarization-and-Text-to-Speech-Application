@@ -30,10 +30,7 @@ def comparative_analysis(articles):
     coverage_differences = []
     for i in range(len(articles) - 1):
         comparison_text = f"Article {i+1} discusses {', '.join(article_keywords[i])}, while Article {i+2} focuses on {', '.join(article_keywords[i+1])}."
-        coverage_differences.append({"Comparison": comparison_text})
-
-    # Sentiment Analysis Summary
-    
+        coverage_differences.append({"Comparison": comparison_text})    
 
     # Return final comparative analysis
     return {

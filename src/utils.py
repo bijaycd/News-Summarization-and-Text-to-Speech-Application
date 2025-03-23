@@ -48,23 +48,32 @@ def analyze_sentiment(text):
 kw_model = KeyBERT('distilbert-base-nli-mean-tokens')
 
 def extract_keywords_keybert(text):
-    return [kw[0] for kw in kw_model.extract_keywords(text, keyphrase_ngram_range=(1, 2), top_n=3)]
+    return [kw[0].title() for kw in kw_model.extract_keywords(text, keyphrase_ngram_range=(1, 2), top_n=3)]
 
 
 # Comparative Analysis
 def comparison_sentiments(articles):
+    """Analyzes sentiment distribution for all 10 articles and determines the overall sentiment."""
     sentiments = [analyze_sentiment(article["summary"]) for article in articles]
+
+    # ✅ Convert sentiment labels to Proper Case
     sentiment_counts = Counter(sentiments)
-    final_sentiment = f"Overall sentiment is {max(sentiment_counts, key=sentiment_counts.get)} with {sentiment_counts} distribution."
+    formatted_counts = {sent.capitalize(): count for sent, count in sentiment_counts.items()}
+
+    # ✅ Determine the final sentiment
+    overall_sentiment = max(sentiment_counts, key=sentiment_counts.get, default="Neutral").capitalize()
+    sentiment_summary = f"Overall sentiment is {overall_sentiment} ({formatted_counts.get('Negative', 0)} Negative, {formatted_counts.get('Positive', 0)} Positive)."
 
     return {
-        "Sentiment Distribution": sentiment_counts,
-        "Final Sentiment Analysis": final_sentiment
+        "Sentiment Distribution": formatted_counts,
+        "Final Sentiment Analysis": sentiment_summary
     }
 
 
+
 # Summarized Text to Hindi Speech
-def generate_hindi_speech(text, filename="output.mp3"):
+def generate_hindi_speech(text):
+
     hindi_text = GoogleTranslator(source="auto", target="hi").translate(text)  # Translate to Hindi
     tts = gTTS(hindi_text, lang="hi")
 
