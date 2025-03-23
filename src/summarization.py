@@ -32,7 +32,7 @@ def summarize_overall_sentiment(articles):
 
     # ✅ Use a valid Groq model (Mixtral or LLaMA-3)
     response = client.chat.completions.create(
-        model="mixtral-8x7b",  # ✅ Use "mixtral-8x7b" (Recommended) or "llama3-70b"
+        model="mistral-saba-24b",  # ✅ Use "mixtral-8x7b" (Recommended) or "llama3-70b"
         messages=[
             {"role": "system", "content": "You are a sentiment analysis assistant."},
             {"role": "user", "content": prompt}
