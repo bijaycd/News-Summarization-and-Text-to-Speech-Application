@@ -7,13 +7,15 @@ WORKDIR /app
 # Copy the entire project into the container
 COPY . /app
 
-# Create a writable cache directory
+# Create a writable cache directory for Matplotlib & Transformers
 RUN mkdir -p /app/cache && chmod -R 777 /app/cache
+RUN mkdir -p /root/.config/matplotlib && chmod -R 777 /root/.config/matplotlib
 
-# Set the environment variable to use this directory
+# Set environment variables for caching
 ENV TRANSFORMERS_CACHE=/app/cache
+ENV MPLCONFIGDIR=/root/.config/matplotlib
 
-# Install fontconfig
+# Install required system dependencies
 RUN apt-get update && apt-get install -y fontconfig
 
 # Install dependencies
@@ -23,5 +25,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8000
 EXPOSE 7860
 
-# Start both FastAPI and Streamlit
-CMD ["bash", "-c", "uvicorn api:app --host 127.0.0.1 --port 8000 & streamlit run app.py --server.port 7860 --server.address 0.0.0.0"]
+# Run both FastAPI and Streamlit properly
+CMD uvicorn api:app --host 0.0.0.0 --port 8000 & streamlit run app.py --server.port 7860 --server.address 0.0.0.0
