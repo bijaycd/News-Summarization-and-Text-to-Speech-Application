@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 
 # Define API URL
-FASTAPI_URL = "http://0.0.0.0:8000"
+FASTAPI_URL = "http://127.0.0.1:8000"
 
 # Configure Streamlit app layout
 st.set_page_config(page_title="Insightful News AI", page_icon="🤖", layout="centered")
@@ -14,11 +14,11 @@ company = st.sidebar.text_input("Enter Company Name")
 get_news = st.sidebar.button("Get News Summary")
 compare_news = st.sidebar.button("Comparative Analysis")
 generate_audio = st.sidebar.button("Generate Audio")
-search = st.sidebar.button("Search")
 
 st.sidebar.subheader("🔍 Search & Filter News")
 search_keyword = st.sidebar.text_input("Search by keyword")
 search_sentiment = st.sidebar.selectbox("Filter by Sentiment", ["", "Positive", "Negative", "Neutral"])
+search = st.sidebar.button("Search")
 
 
 def fetch_data(endpoint, params=None):
@@ -149,7 +149,6 @@ if search:
             for i, article in enumerate(search_results, start=1):
                 st.write(f"### {i}. {article['title']}")
                 st.write(f"**Summary:** {article['summary']}")
-                st.write(f"**Sentiment:** {article['sentiment']}")
                 st.markdown("---")
         else:
             st.warning("No matching articles found.")
