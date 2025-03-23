@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 
 # Define API URL
-FASTAPI_URL = "http://127.0.0.1:8000"
+FASTAPI_URL = "http://0.0.0.0:8000"
 
 # Configure Streamlit app layout
 st.set_page_config(page_title="Insightful News AI", page_icon="🤖", layout="centered")

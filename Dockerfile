@@ -7,13 +7,15 @@ WORKDIR /app
 # Copy the entire project into the container
 COPY . /app
 
-# Create a writable cache directory for Matplotlib & Transformers
+# Create writable cache directories for Matplotlib & Fontconfig
 RUN mkdir -p /app/cache && chmod -R 777 /app/cache
 RUN mkdir -p /root/.config/matplotlib && chmod -R 777 /root/.config/matplotlib
+RUN mkdir -p /root/.cache/fontconfig && chmod -R 777 /root/.cache/fontconfig
 
 # Set environment variables for caching
 ENV TRANSFORMERS_CACHE=/app/cache
 ENV MPLCONFIGDIR=/root/.config/matplotlib
+ENV XDG_CACHE_HOME=/root/.cache
 
 # Install required system dependencies
 RUN apt-get update && apt-get install -y fontconfig
