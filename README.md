@@ -10,7 +10,11 @@ pinned: false
 # **Insightful News AI** 🤖
 
 ## Overview
-Insightful News AI is a FastAPI-based application tool that fetches news articles for a given company, analyzes their sentiment, extracts key topics, and provides Hindi audio summaries. The application uses NLP models for text processing and an AI-powered TTS engine for speech synthesis.
+Insightful News AI is a FastAPI-based application that retrieves news articles for a specified company, performs sentiment analysis, extracts key topics, and generates Hindi audio summaries. It leverages advanced NLP models for text processing and an AI-powered TTS engine for speech synthesis, providing insightful and accessible news analysis. Additionally, it includes a news querying system, allowing users to search for articles based on specific keywords or sentiment filters for a more refined and targeted news exploration experience.
+
+## Deployment Link
+
+🔗 **Live Demo on HuggingFace Spaces:** [Insightful News AI](https://bijayjr-sentimentnews.hf.space/)
 
 ## **Project Setup**  
 ### Prerequisites
@@ -83,15 +87,16 @@ This project uses **three AI models**:
 |--------|---------------------------|-------------|
 | `GET`  | `/`                        | Welcome message. |
 | `GET`  | `/news-analysis/?company=XYZ` | Extracts news titles, summaries and analyzes sentiments |
-| `GET`  | `/comparative-analyst/?company=XYZ` | Performs a comparative sentiment analysis. |
+| `GET`  | `/comparative-analysis/?company=XYZ` | Performs a comparative sentiment analysis. |
 | `GET`  | `/generate-audio/?company=XYZ` | Generates a Hindi audio summary. |
+| `GET`  | `/search-news/?company=XYZ&keyword=finance&sentiment=positive` | Searches for news articles based on keyword and sentiment. |
 
 ---
 
 ## **📡 API Usage**  
 
 ### **1️⃣ Fetch News Sentiment Summary**  
-**Request (Postman, cURL, Python)**  
+**Request (via cURL)**  
 ```bash
 curl -X GET "http://127.0.0.1:8000/news-analysis/?company=Google"
 ```
@@ -156,15 +161,15 @@ curl -X GET "http://127.0.0.1:8000/generate-audio/?company=Google"
 ---
 
 ## **📌 Future Enhancements**  
-✅ **Expand TTS support to more languages**  
-✅ **Improve sentiment classification using fine-tuned LLMs**  
-✅ **Enable real-time news updates using WebSockets**
+1. **Expand TTS support to more languages**  
+2. **Improve sentiment classification using fine-tuned LLMs**  
+3. **Enable real-time news updates using WebSockets**
 
 ---
 
 ### **🔗 Contributors**  
 👤 **Bijay Chandra Das**  
-📧 **bijaydasiitb@example.com**  
+📧 **bijaydasiitb@gmail.com**  
 
 📌 **GitHub Repo**: [GitHub](https://github.com/bijaycd/News-Summarization-and-Text-to-Speech-Application)  
 

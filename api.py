@@ -70,7 +70,6 @@ def generate_audio(company: str) -> StreamingResponse:
     )
 
 
-# (BONUS) Search for Articles based on Keyword or Sentiment
 @app.get("/search-news/")
 def search_news(company: str, keyword: str = None, sentiment: str = None):
     """Search for articles based on keyword or sentiment."""
