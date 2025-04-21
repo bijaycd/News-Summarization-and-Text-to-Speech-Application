@@ -89,4 +89,4 @@ def search_news(company: str, keyword: str = None, sentiment: str = None):
     return JSONResponse(content={"Company": company, "Filtered Articles": filtered_articles})
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=8000)
