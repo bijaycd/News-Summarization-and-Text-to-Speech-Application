@@ -14,3 +14,5 @@ torchvision==0.15.2
 torchaudio==2.0.2
 keybert==0.7.0
 groq
+TTS
+soundfile
